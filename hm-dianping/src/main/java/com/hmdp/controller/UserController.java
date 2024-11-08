@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -61,8 +62,8 @@ public class UserController {
      * @return 无
      */
     @PostMapping("/logout")
-    public Result logout(){
-        return Result.fail("功能未完成");
+    public Result logout(HttpServletRequest request){
+        return userService.logout(request);
     }
 
     @GetMapping("/me")
@@ -72,9 +73,12 @@ public class UserController {
     }
 
     @GetMapping("/info/{id}")
-    public Result info(@PathVariable("id") Long userId){
+    public Result info(@PathVariable("id") String userId){
+        if (userId.equals("undefined")){
+            return Result.ok("暂未登录");
+        }
         // 查询详情
-        UserInfo info = userInfoService.getById(userId);
+        UserInfo info = userInfoService.getById(Long.valueOf(userId));
         if (info == null) {
             // 没有详情，应该是第一次查看详情
             return Result.ok();
@@ -95,5 +99,14 @@ public class UserController {
         UserDTO userDTO = BeanUtil.copyProperties(user, UserDTO.class);
         // 返回
         return Result.ok(userDTO);
+    }
+
+    @PostMapping("/sign")
+    public Result sign(){
+        return userService.sign();
+    }
+    @GetMapping("/sign/count")
+    public Result signCount(){
+        return userService.signCount();
     }
 }

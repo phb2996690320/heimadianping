@@ -153,7 +153,6 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
         UserDTO user = UserHolder.getUser();
         Long userId = user.getId();
         String key = FEED_KEY +userId;
-
         Set<ZSetOperations.TypedTuple<String>> typedTuples = stringRedisTemplate.opsForZSet()
                 .reverseRangeByScoreWithScores(key, 0, max, offset, 2);
         if (typedTuples==null|typedTuples.isEmpty()){

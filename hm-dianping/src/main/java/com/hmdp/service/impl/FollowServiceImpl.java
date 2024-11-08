@@ -48,7 +48,6 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
             follow.setFollowUserId(followUserId);
             boolean save = save(follow);
             if (save){
-
                 stringRedisTemplate.opsForSet().add(key,followUserId.toString());
             }
         } else {
